@@ -45,6 +45,7 @@ html,body{overscroll-behavior:none;touch-action:none;-webkit-touch-callout:none;
 @media (max-height:520px){#overlay h1{font-size:28px;margin:0 0 6px;letter-spacing:4px}#overlay p{font-size:13px;line-height:1.5}.dev{padding:10px;width:170px}.dev .ic{font-size:28px;margin-bottom:2px}#btn{margin-top:10px;padding:9px 34px}#setbtn{margin-top:8px}}
 #ver,#cred{position:fixed;bottom:8px;color:#fff;text-shadow:0 0 6px #000;pointer-events:none;z-index:6;font-size:13px}
 #ver{left:12px}
+#soon{position:fixed;right:12px;bottom:8px;color:#fff;text-shadow:0 0 6px #000;pointer-events:none;z-index:6;font-size:13px}
 #cred{left:50%;transform:translateX(-50%);font-size:14px;letter-spacing:2px;white-space:nowrap}
 #stagesel{display:none;gap:12px;margin:14px 0 2px;flex-wrap:wrap;justify-content:center}
 .stg{min-width:130px;padding:10px 14px;background:#180808;border:2px solid #522;color:#caa;cursor:pointer;font-family:inherit;font-size:16px}
@@ -83,7 +84,7 @@ html,body{overscroll-behavior:none;touch-action:none;-webkit-touch-callout:none;
   <button id="chg" style="display:none">기기 다시 선택</button>
   <button id="setbtn">⚙ 설정</button>
 </div>
-  <div id="ver">버전 2.4</div><div id="cred">제작자 LUCKY STUDIO</div>
+  <div id="ver">버전 2.5</div><div id="cred">제작자 LUCKY STUDIO</div><div id="soon">스테이지 3 추가 예정...</div>
 </div>
 <div id="mctl">
   <div class="mb" id="bP" style="top:12px;left:50%;margin-left:-20px;width:40px;height:40px;font-size:16px">⏸</div>
@@ -112,14 +113,15 @@ html,body{overscroll-behavior:none;touch-action:none;-webkit-touch-callout:none;
 <script>
 (()=>{
 'use strict';
-const TS=40,MW=32,MH=22,LRANGE=300,LHALF=0.3,PL=0.66;
+const TS=40,MW=32,MH=22,LRANGE=300,LHALF=0.3;
+let PL=0.66;
 let device=null;
 const KEY=n=>device==='mobile'?'하단 버튼으로':n+'키로';
 const SKEY='horror_escape_settings_v1';
-const DEFS={jump:true,events:true,bright:1,diff:'normal',tint:'warm',vol:.8,sens:1,shake:true,minimap:false,hint:true,infBat:false,ghost:true,view:'first',xray:false,invY:false,mono:true,proxSound:true,god:false,noclip:false,speed:1,gspd:1};
+const DEFS={jump:true,events:true,bright:1,diff:'normal',tint:'warm',vol:.8,sens:1,shake:true,minimap:false,hint:true,infBat:false,ghost:true,view:'first',xray:false,invY:false,mono:true,proxSound:true,god:false,noclip:false,speed:1,gspd:1,infStam:false,autoRun:false,infItems:false,loot2:false,autoPick:false,fullmap:false,beamR:1,fov:.66,tscale:1,ghostSlow:false,noBlack:false,nightVis:false,fearless:false,radar:false,lockLight:false};
 const S=Object.assign({},DEFS);
 try{const o=JSON.parse(localStorage.getItem(SKEY)||'{}');for(const k in DEFS)if(k in o&&typeof o[k]===typeof DEFS[k])S[k]=o[k];}catch(e){}
-const ADMKEYS=['xray','bright','minimap','hint','infBat','ghost','god','noclip','speed','gspd'];
+const ADMKEYS=['xray','minimap','hint','infBat','ghost','god','noclip','speed','gspd','infStam','autoRun','infItems','loot2','autoPick','fullmap','beamR','fov','tscale','ghostSlow','noBlack','nightVis','fearless','radar','lockLight'];
 let adminOn=false,admOpen=false;
 try{adminOn=localStorage.getItem('horror_admin_ok')==='1';}catch(e){}
 if(!adminOn)ADMKEYS.forEach(k=>{S[k]=DEFS[k];});
@@ -407,7 +409,7 @@ function startHunt(minD){
   sfx('whisper');msg('...뭔가가 다가온다.',3);
 }
 function inLight(px,py,ang,gx,gy){
-  const d=Math.hypot(gx-px,gy-py);if(d>LRANGE)return false;
+  const d=Math.hypot(gx-px,gy-py);if(d>LRANGE*S.beamR)return false;
   let da=Math.atan2(gy-py,gx-px)-ang;da=Math.atan2(Math.sin(da),Math.cos(da));
   if(Math.abs(da)>LHALF+0.06)return false;
   return los(px,py,gx,gy);
@@ -422,7 +424,7 @@ function updateGhost(dt){
   if(G.t<=0&&G.check<=0){G.state='away';G.t=(12+Math.random()*8)*D().away;G.stare=0;return;}
   const hideOn=hide.on;
   const dxp=player.x-G.x,dyp=player.y-G.y,d=Math.hypot(dxp,dyp);
-  G.lit=lightOn&&!hideOn&&inLight(player.x,player.y,player.ang,G.x,G.y);
+  G.lit=(lightOn&&!hideOn&&inLight(player.x,player.y,player.ang,G.x,G.y))||(S.ghostSlow&&!hideOn);
   G.cool-=dt;if(G.rush>0)G.rush-=dt;G.scrT-=dt;
   if(G.blink>0)G.blink-=dt;else if(Math.random()<dt*.35)G.blink=.1+Math.random()*.1;
   const sight=!hideOn&&d<700&&los(G.x,G.y,player.x,player.y);
@@ -502,6 +504,7 @@ function randomEvent(){
 /* ---------- ACTIONS ---------- */
 function pickup(it){
   it.taken=true;sfx('pickup');
+  if(S.loot2&&inv[it.type]!==undefined)inv[it.type]++;
   switch(it.type){
     case 'battery':inv.battery++;msg('배터리를 얻었다. ('+KEY(1)+' 사용)');break;
     case 'pill':inv.pill++;msg('진정제를 얻었다. ('+KEY(2)+' 사용)');break;
@@ -522,6 +525,7 @@ function pickup(it){
 }
 function useItem(n){
   if(state!=='play')return;
+  const before=S.infItems?Object.assign({},inv):null;
   if(n===1){
     if(inv.battery>0&&battery<100){inv.battery--;battery=Math.min(100,battery+50);sfx('click');msg('배터리를 교체했다.');}
     else if(inv.battery<=0)msg('배터리가 없다.');else msg('아직 배터리가 충분하다.');
@@ -550,6 +554,7 @@ function useItem(n){
       msg('소음 장치를 던졌다. 14초간 그것이 소리를 따라간다.',4);
     }else msg('소음 장치가 없다.');
   }
+  if(before)Object.assign(inv,before);
 }
 function facing(x,y){
   let da=Math.atan2(y-player.y,x-player.x)-player.ang;da=Math.atan2(Math.sin(da),Math.cos(da));
@@ -589,6 +594,14 @@ function exitHide(){
   player.x=hide.fx;player.y=hide.fy;G.check=0;
   sfx('door');
 }
+function winGame(){
+    state='win';winTime=time;sfx('door');
+    if(document.exitPointerLock)document.exitPointerLock();
+    const tm='걸린 시간: <b>'+Math.floor(winTime/60)+'분 '+Math.floor(winTime%60)+'초</b>';
+    const nxt=curLvl+1<LEVELS.length;
+    if(nxt){progress.unlocked=Math.max(progress.unlocked,curLvl+2);saveProgress();selLvl=curLvl+1;}
+    showOverlay((curLvl+1)+'단계 탈출 성공',nxt?'차가운 바깥 공기가 느껴진다... 하지만 아직 끝이 아니다.<br>'+tm+'<br><br><b style="color:#fd6">🔓 '+(curLvl+2)+'단계 ('+LEVELS[curLvl+1].name+')가 열렸습니다!</b>':'모든 단계를 클리어했습니다! 당신은 살아서 빠져나왔다...<br>'+tm,nxt?(curLvl+2)+'단계 시작':'다시 하기',true);
+}
 function interact(){
   if(state!=='play')return;
   if(hide.on){exitHide();return;}
@@ -607,12 +620,7 @@ function interact(){
     }else msg('퓨즈 장착 ('+placed+'/3)');
   }else if(t.kind==='exit'){
     if(!hasKey){msg('잠겨 있다. 열쇠가 필요해.');return;}
-    state='win';winTime=time;sfx('door');
-    if(document.exitPointerLock)document.exitPointerLock();
-    const tm='걸린 시간: <b>'+Math.floor(winTime/60)+'분 '+Math.floor(winTime%60)+'초</b>';
-    const nxt=curLvl+1<LEVELS.length;
-    if(nxt){progress.unlocked=Math.max(progress.unlocked,curLvl+2);saveProgress();selLvl=curLvl+1;}
-    showOverlay((curLvl+1)+'단계 탈출 성공',nxt?'차가운 바깥 공기가 느껴진다... 하지만 아직 끝이 아니다.<br>'+tm+'<br><br><b style="color:#fd6">🔓 '+(curLvl+2)+'단계 ('+LEVELS[curLvl+1].name+')가 열렸습니다!</b>':'모든 단계를 클리어했습니다! 당신은 살아서 빠져나왔다...<br>'+tm,nxt?(curLvl+2)+'단계 시작':'다시 하기',true);
+    winGame();
   }
 }
 
@@ -642,9 +650,9 @@ function update(dt){
   const ca=Math.cos(player.ang),sa=Math.sin(player.ang);
   let dx=0,dy=0;
   if(moving){dx=(ca*fw-sa*st)/L;dy=(sa*fw+ca*st)/L;}
-  const sprint=moving&&(keys['shift']||mSprint)&&(stamina>0||pillT>0);
+  const sprint=moving&&(keys['shift']||mSprint||S.autoRun)&&(stamina>0||pillT>0);
   const sp=(sprint?165:100)*(device==='mobile'?Math.max(.45,mag):1)*S.speed;
-  if(sprint&&pillT<=0)stamina=Math.max(0,stamina-24*dt);
+  if(sprint&&pillT<=0&&!S.infStam)stamina=Math.max(0,stamina-24*dt);
   else stamina=Math.min(100,stamina+(moving?7:18)*dt);
   const nx=player.x+dx*sp*dt;if(canMove(nx,player.y,10))player.x=nx;
   const ny=player.y+dy*sp*dt;if(canMove(player.x,ny,10))player.y=ny;
@@ -654,6 +662,9 @@ function update(dt){
   }
 
   if(pillT>0)pillT-=dt;
+  if(S.noBlack){blackoutT=0;flickT=0;}
+  if(S.fearless){fear=0;shake=0;scareT=0;}
+  if(S.lockLight&&!hide.on)light=true;
   if(flareT>0)flareT-=dt;
   if(mapT>0)mapT-=dt;
   if(decT>0){decT-=dt;decBeep-=dt;if(decBeep<=0){decBeep=.9;sfx('chime');}}
@@ -669,6 +680,7 @@ function update(dt){
   if(battery>0)update.warned=false;
 
   updateGhost(dt);
+  if(S.autoPick&&!hide.on)for(const it of items){if(!it.taken&&Math.hypot(it.x-player.x,it.y-player.y)<60)pickup(it);}
 
   if(time>nextScare){nextScare=time+(35+Math.random()*40)*D().ev;if(S.events)randomEvent();}
   if(scareT>0)scareT-=dt;
@@ -750,7 +762,8 @@ function lightAt(beam,d){
   d=d>CB?d-CB:0.05;
   let b=(0.05/(1+d*d*0.4)+0.014)*AMB;
   if(DAY>0)b=b*(1-DAY)+DAY*2.0/(1+d*0.03);
-  if(flash>0&&beam>0&&d<9){const a=1-d/9;b+=flash*BK*(1-DAY*.85)*beam*a*(0.6+0.7*a)*1.1;}
+  const BR=9*S.beamR;
+  if(flash>0&&beam>0&&d<BR){const a=1-d/BR;b+=flash*BK*(1-DAY*.85)*beam*a*(0.6+0.7*a)*1.1;}
   if(FL>0)b+=FL*0.5/(1+d*d*0.05)*(1-DAY*.7);
   const mx=1+DAY*1.1;
   return b>mx?mx:b;
@@ -835,6 +848,7 @@ function drawSprite(s){
   }
 }
 function renderWorld(){
+  PL=S.fov;
   const dirX=Math.cos(player.ang),dirY=Math.sin(player.ang);
   const third=S.view==='third'&&!hide.on;
   if(third){
@@ -852,7 +866,7 @@ function renderWorld(){
   C_px=px;C_py=py;C_dx=dirX;C_dy=dirY;C_plx=plX;C_ply=plY;C_hh=hh;GS.on=false;
   flash=lightOn?(battery<20?.65:1):0;
   const tn=TINTS[S.tint]||TINTS.warm;LR=tn[0];LG=tn[1];LB=tn[2];
-  AMB=S.bright*S.bright*LV().mod.amb;BK=0.7+0.3*S.bright;
+  AMB=S.bright*S.bright*LV().mod.amb;if(S.nightVis)AMB=Math.max(AMB,6);BK=0.7+0.3*S.bright;
   {const t=Math.max(0,Math.min(1,(S.bright-1.8)/1.2));DAY=t*t*(3-2*t);}
   if(DAY>0){LR+=(1-LR)*DAY*.7;LG+=(.97-LG)*DAY*.7;LB+=(.9-LB)*DAY*.7;}
   FL=flareT>0?Math.min(1,flareT/2)*(0.88+0.12*Math.random()):0;
@@ -981,6 +995,7 @@ function drawHand(){
 }
 function drawHUD(){
   const W=cv.width,H=cv.height,mob=device==='mobile';
+  if(S.radar&&G&&S.ghost){const gd=Math.round(Math.hypot(G.x-player.x,G.y-player.y)/TS*10)/10;ctx.save();ctx.font='bold 16px sans-serif';ctx.textAlign='center';ctx.fillStyle=gd<5?'#f55':'#9f9';ctx.fillText('귀신까지 '+gd+'m'+(G.state==='away'?' (물러남)':''),W/2,mob?60:28);ctx.restore();}
   const bl='손전등 '+Math.ceil(battery)+'%'+(light?'':' (꺼짐)');
   if(mob){
     bar(W-190,44,170,16,battery/100,battery<20?'#c33':'#cb3',bl);
@@ -1123,7 +1138,7 @@ function drawXray(){
   ctx.restore();
 }
 function drawMinimap(mob){
-  const full=mapT>0;
+  const full=mapT>0||S.fullmap;
   if(!S.minimap&&!full)return;
   const W=cv.width,ms=mob?3:4,mw=MW*ms,mh=MH*ms,ox=W-mw-12,oy=mob?88:12;
   ctx.save();
@@ -1223,6 +1238,7 @@ const setPanel=document.getElementById('set'),setBody=document.getElementById('s
 const admBtn=document.getElementById('admbtn'),admLock=document.getElementById('admlock'),admGate=document.getElementById('admgate'),admBody=document.getElementById('admbody'),admMsg=document.getElementById('admmsg'),admPw=document.getElementById('admpw'),admOk=document.getElementById('admok'),admErr=document.getElementById('admerr');
 const pct=v=>Math.round(v*100)+'%';
 const SCHEMA=[
+ {k:'bright',t:'방 밝기',d:'낮추면 더 어둡고, 최대(300%)로 올리면 아침처럼 환해집니다.',type:'range',min:.4,max:3,step:.1,f:v=>v>=2.95?'☀ 아침':pct(v)},
  {k:'view',t:'시점',d:'1인칭 / 3인칭 (캐릭터 뒤에서 보기, 게임 중 V키)',type:'seg',opts:[['first','1인칭'],['third','3인칭']]},
  {k:'mono',t:'흑백 공포 모드',d:'화면이 흑백이 되고 귀신의 눈만 하얗게 빛납니다. (손전등 색상은 흑백을 끄면 적용)',type:'bool'},
  {k:'proxSound',t:'귀신 접근 소리',d:'가까워질수록 커지는 발소리·숨소리·저주파음 (방향도 들려요)',type:'bool'},
@@ -1241,9 +1257,74 @@ function giveAll(){
   return '아이템을 각각 +3개 지급하고 배터리를 충전했어요.';
 }
 function unlockAll(){progress.unlocked=LEVELS.length;saveProgress();buildStageSel();return '모든 단계를 해금했어요.';}
+const inGameNow=()=>player&&(state==='paused'||state==='play');
+const NOGAME='게임 중(일시정지 화면)에서만 쓸 수 있어요.';
+function banish(){
+  if(!inGameNow())return NOGAME;
+  G.state='away';G.t=30;G.check=0;G.stare=0;return '귀신을 30초간 쫓아냈어요.';
+}
+function instaPower(){
+  if(!inGameNow())return NOGAME;
+  if(power)return '이미 전원이 켜져 있어요.';
+  items.forEach(i=>{if(i.type==='fuse')i.taken=true;});
+  placed=3;fuses=0;power=true;map[LV().door[1]][LV().door[0]]='.';sfx('door');
+  return '전원을 복구했어요. 잠긴 방이 열렸어요.';
+}
+function giveKey(){
+  if(!inGameNow())return NOGAME;
+  if(hasKey)return '이미 열쇠를 가지고 있어요.';
+  hasKey=true;items.forEach(i=>{if(i.type==='key')i.taken=true;});sfx('pickup');
+  return '열쇠를 얻었어요. 출구로 가세요!';
+}
+function tpExit(){
+  if(!inGameNow())return NOGAME;
+  if(hide.on)return '옷장에서 나온 뒤 사용하세요.';
+  const ex=LV().exit[0]*TS,ey=LV().exit[1]*TS,tx=Math.floor(LV().exit[0]),ty=Math.floor(LV().exit[1]);
+  for(const [dx,dy] of [[-1,0],[1,0],[0,-1],[0,1]]){
+    if(!isSolidTile(tx+dx,ty+dy)){
+      player.x=(tx+dx+.5)*TS;player.y=(ty+dy+.5)*TS;player.ang=Math.atan2(ey-player.y,ex-player.x);pitch=0;
+      return '출구 앞으로 이동했어요.';
+    }
+  }
+  return '이동할 수 없어요.';
+}
+function forceWin(){
+  if(!inGameNow())return NOGAME;
+  if(hide.on)hide.on=false;
+  setPanel.style.display='none';winGame();return '';
+}
+function refill(){
+  if(!inGameNow())return NOGAME;
+  battery=100;stamina=100;sfx('click');return '배터리와 스태미나를 가득 채웠어요.';
+}
+function collectAll(){
+  if(!inGameNow())return NOGAME;
+  if(hide.on)return '옷장에서 나온 뒤 사용하세요.';
+  let n=0;for(const it of items){if(!it.taken){pickup(it);n++;}}
+  return n?n+'개의 아이템을 모두 수집했어요.':'주울 아이템이 없어요.';
+}
+function ghostFar(){
+  if(!inGameNow())return NOGAME;
+  let bx=G.x,by=G.y,bd=0;
+  for(let i=0;i<300;i++){
+    const tx=1+Math.floor(Math.random()*30),ty=1+Math.floor(Math.random()*20);
+    if(isSolidTile(tx,ty)||(!power&&inLocked(tx,ty)))continue;
+    const x=tx*TS+TS/2,y=ty*TS+TS/2,d=Math.hypot(x-player.x,y-player.y);
+    if(d>bd){bd=d;bx=x;by=y;}
+  }
+  G.x=bx;G.y=by;G.path=[];G.stare=0;G.check=0;return '귀신을 가장 먼 곳으로 보냈어요.';
+}
+function toStart(){
+  if(!inGameNow())return NOGAME;
+  if(hide.on)return '옷장에서 나온 뒤 사용하세요.';
+  player.x=LV().start[0]*TS;player.y=LV().start[1]*TS;pitch=0;return '시작 지점으로 돌아왔어요.';
+}
+function calmDown(){
+  if(!inGameNow())return NOGAME;
+  fear=0;shake=0;flickT=0;blackoutT=0;scareT=0;G.stare=0;G.rush=0;return '공포 연출을 모두 가라앉혔어요.';
+}
 const ADMIN=[
  {k:'xray',t:'X-ray (투시)',d:'벽 너머의 아이템·배전함·출구·옷장·귀신 위치를 표시 (게임 중 X키)',type:'bool'},
- {k:'bright',t:'방 밝기',d:'낮추면 더 어둡고, 최대(300%)로 올리면 아침처럼 환해집니다.',type:'range',min:.4,max:3,step:.1,f:v=>v>=2.95?'☀ 아침':pct(v)},
  {k:'minimap',t:'미니맵',d:'구조와 내 위치를 항상 표시 (지도 아이템은 아이템·귀신 위치까지 표시)',type:'bool'},
  {k:'hint',t:'아이템 반짝임',d:'가까운 아이템이 어둠 속에서 희미하게 반짝입니다.',type:'bool'},
  {k:'infBat',t:'무한 배터리',d:'손전등이 꺼지지 않습니다.',type:'bool'},
@@ -1252,6 +1333,31 @@ const ADMIN=[
  {k:'noclip',t:'벽 통과',d:'벽과 옷장을 통과해서 걸어다닙니다.',type:'bool'},
  {k:'speed',t:'내 이동속도',d:'기본 1.0배',type:'range',min:.5,max:3,step:.1,f:v=>v.toFixed(1)+'x'},
  {k:'gspd',t:'귀신 속도',d:'0이면 귀신이 멈춥니다. 기본 1.0배',type:'range',min:0,max:2,step:.1,f:v=>v.toFixed(1)+'x'},
+ {k:'infStam',t:'무한 스태미나',d:'달려도 지치지 않습니다.',type:'bool'},
+ {k:'autoRun',t:'자동 달리기',d:'움직이면 항상 달립니다. (Shift 안 눌러도 됨)',type:'bool'},
+ {k:'infItems',t:'아이템 무한 사용',d:'아이템을 써도 개수가 줄지 않습니다.',type:'bool'},
+ {k:'loot2',t:'아이템 2배 획득',d:'아이템을 주울 때 2개씩 얻습니다.',type:'bool'},
+ {k:'autoPick',t:'아이템 자동 줍기',d:'가까이 가면 자동으로 주워집니다.',type:'bool'},
+ {k:'fullmap',t:'전체 지도 상시 표시',d:'미니맵에 남은 아이템과 귀신 위치까지 항상 표시합니다.',type:'bool'},
+ {k:'beamR',t:'손전등 사거리',d:'빛이 닿는 거리와 귀신을 느리게 하는 범위. 기본 1.0배',type:'range',min:.5,max:3,step:.1,f:v=>v.toFixed(1)+'x'},
+ {k:'fov',t:'시야각',d:'높일수록 넓게 보입니다. 기본 0.66',type:'range',min:.4,max:1.5,step:.02,f:v=>v.toFixed(2)},
+ {k:'tscale',t:'게임 속도',d:'낮추면 슬로모션, 높이면 빨라집니다. 기본 1.0배',type:'range',min:.3,max:1.5,step:.1,f:v=>v.toFixed(1)+'x'},
+ {t:'귀신 쫓아내기',d:'일시정지 화면에서 사용: 귀신이 30초간 사라집니다.',type:'action',label:'실행',run:banish},
+ {t:'전원 즉시 복구',d:'퓨즈 없이 전원을 켜고 잠긴 방을 엽니다.',type:'action',label:'실행',run:instaPower},
+ {t:'열쇠 즉시 획득',d:'열쇠를 바로 얻습니다.',type:'action',label:'실행',run:giveKey},
+ {t:'출구 앞으로 이동',d:'출구 바로 앞으로 순간이동합니다.',type:'action',label:'이동',run:tpExit},
+ {t:'즉시 클리어',d:'지금 단계를 바로 클리어합니다. (다음 단계 해금)',type:'action',label:'클리어',run:forceWin},
+ {k:'ghostSlow',t:'귀신 항상 둔화',d:'손전등을 안 비춰도 귀신이 계속 느려집니다.',type:'bool'},
+ {k:'noBlack',t:'정전·깜빡임 제거',d:'손전등이 깜빡이거나 꺼지는 일이 없습니다.',type:'bool'},
+ {k:'nightVis',t:'야간 투시',d:'어두운 곳도 환하게 보입니다. (밝기와 별개)',type:'bool'},
+ {k:'fearless',t:'공포 연출 제거',d:'화면 흔들림과 공포 효과를 없앱니다.',type:'bool'},
+ {k:'radar',t:'귀신 레이더',d:'화면 위에 귀신까지의 거리를 표시합니다.',type:'bool'},
+ {k:'lockLight',t:'손전등 항상 켜짐',d:'손전등이 꺼지지 않습니다. (옷장 안 제외)',type:'bool'},
+ {t:'배터리·스태미나 충전',d:'일시정지 화면에서 사용: 둘 다 100%로 채웁니다.',type:'action',label:'충전',run:refill},
+ {t:'모든 아이템 수집',d:'맵의 남은 아이템(퓨즈·열쇠 포함)을 전부 줍습니다.',type:'action',label:'수집',run:collectAll},
+ {t:'귀신 멀리 보내기',d:'귀신을 맵에서 가장 먼 곳으로 순간이동시킵니다.',type:'action',label:'실행',run:ghostFar},
+ {t:'시작 지점으로 이동',d:'처음 시작한 위치로 돌아갑니다.',type:'action',label:'이동',run:toStart},
+ {t:'공포 진정',d:'화면 흔들림·깜빡임·귀신의 노려봄을 즉시 멈춥니다.',type:'action',label:'실행',run:calmDown},
  {t:'모든 아이템 지급',d:'일시정지 화면에서 사용: 각 아이템 +3, 배터리 충전',type:'action',label:'지급',run:giveAll},
  {t:'모든 단계 해금',d:'2단계를 바로 선택할 수 있게 합니다.',type:'action',label:'해금',run:unlockAll}
 ];
@@ -1438,7 +1544,7 @@ function updateMobItems(){
 let last=performance.now();
 function loop(now){
   const dt=Math.min(.05,(now-last)/1000);last=now;
-  if(state==='play')update(dt);
+  if(state==='play')update(dt*S.tscale);
   else if(state==='dead'){
     deadT+=dt;if(S.jump&&shake<.3)shake=.3;
     if(deadT>1.8){
@@ -1451,8 +1557,8 @@ function loop(now){
   requestAnimationFrame(loop);
 }
 requestAnimationFrame(loop);
-if(window.__HORROR_DEBUG)window.__h={reset:reset,update:update,render:render,setState:s=>{state=s;},setDevice:setDevice,joy:joy,setPitch:v=>{pitch=v;},S:S,D:D,initAudio:initAudio,enterHide:enterHide,exitHide:exitHide,hide:hide,CL:()=>CLOSETS,giveAll:giveAll,unlockAll:unlockAll,tryAdmin:tryAdmin,hpw:hpw,isAdmin:()=>adminOn,syncAdm:syncAdm,setLevel:l=>{curLvl=l;selLvl=l;},progress:progress,interact:interact,getTarget:getTarget,toggleLight:toggleLight,getLight:()=>light,getProx:()=>prox,getState:()=>state,useItem:useItem,die:die,buildSettings:buildSettings,get:()=>({player,G,items})};
+if(window.__HORROR_DEBUG)window.__h={reset:reset,update:update,render:render,setState:s=>{state=s;},setDevice:setDevice,joy:joy,setPitch:v=>{pitch=v;},S:S,D:D,initAudio:initAudio,enterHide:enterHide,exitHide:exitHide,hide:hide,CL:()=>CLOSETS,banish:banish,refill:refill,collectAll:collectAll,ghostFar:ghostFar,toStart:toStart,calmDown:calmDown,instaPower:instaPower,giveKey:giveKey,tpExit:tpExit,forceWin:forceWin,inv:()=>inv,getStam:()=>stamina,getPL:()=>PL,giveAll:giveAll,unlockAll:unlockAll,tryAdmin:tryAdmin,hpw:hpw,isAdmin:()=>adminOn,syncAdm:syncAdm,setLevel:l=>{curLvl=l;selLvl=l;},progress:progress,interact:interact,getTarget:getTarget,toggleLight:toggleLight,getLight:()=>light,getProx:()=>prox,getState:()=>state,useItem:useItem,die:die,buildSettings:buildSettings,get:()=>({player,G,items})};
 })();
 </script>
 </body>
-</html>
+  </html>
