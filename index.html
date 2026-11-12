@@ -45,7 +45,6 @@ html,body{overscroll-behavior:none;touch-action:none;-webkit-touch-callout:none;
 @media (max-height:520px){#overlay h1{font-size:28px;margin:0 0 6px;letter-spacing:4px}#overlay p{font-size:13px;line-height:1.5}.dev{padding:10px;width:170px}.dev .ic{font-size:28px;margin-bottom:2px}#btn{margin-top:10px;padding:9px 34px}#setbtn{margin-top:8px}}
 #ver,#cred{position:fixed;bottom:8px;color:#fff;text-shadow:0 0 6px #000;pointer-events:none;z-index:6;font-size:13px}
 #ver{left:12px}
-#soon{position:fixed;right:12px;bottom:8px;color:#fff;text-shadow:0 0 6px #000;pointer-events:none;z-index:6;font-size:13px}
 #cred{left:50%;transform:translateX(-50%);font-size:14px;letter-spacing:2px;white-space:nowrap}
 #stagesel{display:none;gap:12px;margin:14px 0 2px;flex-wrap:wrap;justify-content:center}
 .stg{min-width:130px;padding:10px 14px;background:#180808;border:2px solid #522;color:#caa;cursor:pointer;font-family:inherit;font-size:16px}
@@ -84,7 +83,7 @@ html,body{overscroll-behavior:none;touch-action:none;-webkit-touch-callout:none;
   <button id="chg" style="display:none">기기 다시 선택</button>
   <button id="setbtn">⚙ 설정</button>
 </div>
-  <div id="ver">버전 2.5</div><div id="cred">제작자 LUCKY STUDIO</div><div id="soon">스테이지 3 추가 예정...</div>
+  <div id="ver">버전 2.5</div><div id="cred">제작자 LUCKY STUDIO</div>
 </div>
 <div id="mctl">
   <div class="mb" id="bP" style="top:12px;left:50%;margin-left:-20px;width:40px;height:40px;font-size:16px">⏸</div>
@@ -1194,6 +1193,11 @@ function buildStageSel(){
     b.onclick=()=>{if(lock)return;selLvl=i;buildStageSel();};
     stagesel.appendChild(b);
   });
+  const soon=document.createElement('button');
+  soon.className='stg lock';
+  soon.innerHTML='🔒 '+(LEVELS.length+1)+'단계<small>스테이지 '+(LEVELS.length+1)+' 추가 예정...</small>';
+  soon.onclick=()=>{};
+  stagesel.appendChild(soon);
 }
 function setMobileUI(show){
   mctl.style.display=show?'block':'none';
@@ -1561,4 +1565,4 @@ if(window.__HORROR_DEBUG)window.__h={reset:reset,update:update,render:render,set
 })();
 </script>
 </body>
-  </html>
+</html>
