@@ -29,6 +29,13 @@ html,body{overscroll-behavior:none;touch-action:none;-webkit-touch-callout:none;
 .mi{position:static;border-radius:10px;width:58px;height:36px;font-size:13px}
 #setbtn{margin-top:14px;padding:9px 28px;background:#111;color:#dcb;border:1px solid #766;cursor:pointer;font-family:inherit;font-size:15px;letter-spacing:2px}
 #setbtn:hover{background:#2a1a1a;color:#fff}
+#logbtn{margin:14px 0 0 8px;padding:9px 20px;background:#111;color:#dcb;border:1px solid #766;cursor:pointer;font-family:inherit;font-size:15px;letter-spacing:2px}
+#logbtn:hover{background:#2a1a1a;color:#fff}
+#logp{position:fixed;inset:0;display:none;background:rgba(0,0,0,.94);z-index:8;overflow-y:auto;touch-action:pan-y;padding:12px;box-sizing:border-box}
+#logbox{max-width:560px;margin:20px auto;color:#dcb;font-size:14px;line-height:1.6}
+#logbox h2{text-align:center;color:#e88;letter-spacing:3px}
+#logbox h3{margin:16px 0 4px;color:#fff;border-bottom:1px solid #522;padding-bottom:3px}
+#logbox ul{margin:4px 0;padding-left:20px}
 #set{position:fixed;inset:0;display:none;background:rgba(0,0,0,.94);z-index:8;overflow-y:auto;touch-action:pan-y;padding:12px;box-sizing:border-box}
 #setbox{margin:auto;width:min(580px,100%);text-align:left}
 #setbox h2{text-align:center;color:#c33;letter-spacing:6px;margin:6px 0 10px}
@@ -73,7 +80,7 @@ html,body{overscroll-behavior:none;touch-action:none;-webkit-touch-callout:none;
     <p><b>미션</b> ① 퓨즈 3개 찾기 → ② 배전함에 장착(전원 복구) → ③ 열린 방에서 열쇠 찾기 → ④ 출구로 탈출</p>
     <p><b>아이템</b> 🔋배터리(손전등 충전) 💊진정제(지치지 않음) 📿부적(귀신 쫓음)<br>🗺지도(구조·위치 표시) 🔥조명탄(주변 밝힘+귀신 주춤) 🔔소음 장치(귀신 유인)</p>
     <p><b>숨기</b> 벽에 붙은 <b>회색 옷장</b> 앞에서 E → 숨기 (손전등은 자동으로 꺼져요). 귀신이 문틈으로 들여다보지만 <b>가만히 있으면 안전</b>합니다. 귀신이 문 앞에 서 있는 동안엔 나갈 수 없어요. E로 나오기.</p>
-    <p><b>스테이지</b> 1단계를 깨면 <b>2단계(지하 병동)</b>가 열립니다. 더 어둡고 귀신이 더 빨라요.</p>
+    <p><b>스테이지</b> 1단계를 깨면 <b>2단계(지하 병동)</b>가 열립니다. 더 어둡고 귀신이 더 빨라요. 2단계를 깨면 <b>3단계(저주받은 학교)</b>가 열리는데, 귀신이 <b>2마리</b>입니다.</p>
     <p id="ctlinfo"></p>
     <p>그것은 <b>손전등 빛을 정면으로 받으면 느려집니다.</b> 어둠 속에서 하얗게 빛나는 눈을 조심하세요.</p>
     <p class="warn">⚠ 갑작스러운 큰 소리와 점프스퀘어가 있습니다. 헤드폰 사용 시 볼륨 주의!</p>
@@ -81,9 +88,9 @@ html,body{overscroll-behavior:none;touch-action:none;-webkit-touch-callout:none;
   <div id="stagesel"></div>
   <button id="btn" style="display:none">게임 시작</button>
   <button id="chg" style="display:none">기기 다시 선택</button>
-  <button id="setbtn">⚙ 설정</button>
+  <button id="setbtn">⚙ 설정</button><button id="logbtn">📜 업데이트 내역</button>
 </div>
-  <div id="ver">버전 2.51</div><div id="cred">제작자 LUCKY STUDIO</div>
+  <div id="ver">버전 2.61</div><div id="cred">제작자 LUCKY STUDIO</div>
 </div>
 <div id="mctl">
   <div class="mb" id="bP" style="top:12px;left:50%;margin-left:-20px;width:40px;height:40px;font-size:16px">⏸</div>
@@ -99,11 +106,20 @@ html,body{overscroll-behavior:none;touch-action:none;-webkit-touch-callout:none;
     <div class="mb mi" id="b6">🔔 x0</div>
   </div>
 </div>
+<div id="logp"><div id="logbox"><h2>📜 업데이트 내역</h2>
+<h3>버전 2.61</h3><ul><li>관리자 비밀번호 변경</li></ul>
+<h3>버전 2.6</h3><ul><li><b>3단계 '저주받은 학교' 추가</b> (2단계 클리어 시 해금)</li><li>다시 시작할 때마다 아이템·퓨즈·라디오·출입증·열쇠 위치가 무작위로 바뀜</li><li>미션 추가: 라디오 3대 끄기, 교무실 출입증 찾기 (출구를 열려면 열쇠 + 출입증 + 라디오 모두 필요)</li><li>귀신 2마리: 기존 괴물 + 새로운 '울음 귀신' (바라보면 멈추고, 등을 돌리면 빠르게 다가오며 순간이동함)</li><li>새 기믹 5개: ① 시끄러운 라디오 ② 정신력 게이지와 환각 ③ 유리 조각 소음 함정 ④ 비상 셔터 ⑤ 깊어지는 밤</li><li>울음 귀신 전용 점프스퀘어</li></ul>
+<h3>버전 2.51</h3><ul><li>버전 표기 변경</li><li>업데이트 내역 화면 추가</li></ul>
+<h3>버전 2.5</h3><ul><li>방 밝기를 관리자 설정에서 일반 설정으로 이동</li><li>스테이지 3 추가 예정 안내 박스 추가</li></ul>
+<h3>버전 2.45</h3><ul><li>제작자 표기를 LUCKY STUDIO로 변경</li><li>관리자 사기 기능 11개 추가: 귀신 항상 둔화, 정전·깜빡임 제거, 야간 투시, 공포 연출 제거, 귀신 레이더, 손전등 항상 켜짐, 배터리·스태미나 충전, 모든 아이템 수집, 귀신 멀리 보내기, 시작 지점으로 이동, 공포 진정</li></ul>
+<h3>버전 2.4</h3><ul><li>시작 화면에 버전과 제작자 표시</li><li>비밀번호로 여는 관리자 설정 추가 (X-ray 등 사기 설정 이동)</li><li>관리자 기능: 무적, 벽 통과, 이동·귀신 속도 조절, 배터리 무한, 모든 아이템 지급, 모든 단계 해금</li><li>관리자 사기 기능 14개 추가: 무한 스태미나, 자동 달리기, 아이템 무한 사용, 아이템 2배 획득, 아이템 자동 줍기, 전체 지도 상시 표시, 손전등 사거리, 시야각, 게임 속도, 귀신 쫓아내기, 전원 즉시 복구, 열쇠 즉시 획득, 출구 앞으로 이동, 즉시 클리어</li></ul>
+<h3>초기 개발 (2.4 이전)</h3><ul><li>어두운 방 탈출 공포게임, 손전등, 점프스퀘어, 아이템</li><li>1인칭/3인칭 시점, 위아래 보기, 밝기 최대 시 아침 모드</li><li>PC(WASD)/핸드폰(조이스틱·드래그) 선택</li><li>설정 화면: 점프스퀘어, 난이도 등</li><li>X-ray로 아이템·귀신 위치 표시</li><li>흑백 공포 모드의 더 무서운 귀신, 옷장 숨기, 접근 소리</li><li>새 괴물 점프스퀘어 얼굴, 옷장 숨어도 죽던 버그 수정</li><li>스테이지 1 클리어 시 스테이지 2 해금</li></ul>
+<div class="setbtns"><button id="logclose">닫기</button></div></div></div>
 <div id="set"><div id="setbox"><h2>⚙ 설정</h2><div id="setbody"></div>
   <div id="admwrap">
     <button id="admbtn">🔒 관리자 설정</button>
     <button id="admlock" style="display:none">🔒 다시 잠그기</button>
-    <div id="admgate" style="display:none;margin-top:10px"><input id="admpw" type="password" inputmode="numeric" placeholder="비밀번호" autocomplete="off"><button id="admok">확인</button><div id="admerr"></div></div>
+    <div id="admgate" style="display:none;margin-top:10px"><input id="admpw" type="password" placeholder="비밀번호" autocomplete="off"><button id="admok">확인</button><div id="admerr"></div></div>
     <div id="admbody" style="display:none"></div>
     <div id="admmsg"></div>
   </div>
@@ -231,9 +247,36 @@ const L2ITEMS={
   flare:[[10,8],[16,16],[25,14]],
   decoy:[[6,12],[17,19],[20,12]]
 };
+const L3ROWS=[
+"################################",
+"#......#........#.......#......#",
+"#......#........#.......#......#",
+"#..............................#",
+"#......#........#.......#......#",
+"#......#........#.......#......#",
+"###..######..######..######..###",
+"#..............................#",
+"#..............................X",
+"####..#######..#################",
+"#........#.........#...........#",
+"#........#.........#...........#",
+"#........#.........#...........#",
+"#........#.........#...........#",
+"#..................#...........#",
+"#..................D...........#",
+"#........#.........#...........#",
+"#........#.........#...........#",
+"#........#.........#...........#",
+"#........#.........#...........#",
+"#........#.........#...........#",
+"################################"
+];
+const L3OBST=[[4, 3], [12, 3], [20, 3], [27, 3], [4, 13], [5, 17], [13, 13], [14, 17], [24, 13], [25, 17], [28, 15], [22, 18]];
+const L3CL=[[1,1,Math.PI/2],[6,5,-Math.PI/2],[15,5,-Math.PI/2],[17,1,Math.PI/2],[23,5,-Math.PI/2],[25,5,0],[30,1,Math.PI],[1,7,0],[30,7,Math.PI],[1,20,-Math.PI/2],[8,12,Math.PI],[10,20,-Math.PI/2],[18,12,Math.PI],[20,20,-Math.PI/2],[30,12,Math.PI],[27,20,-Math.PI/2]];
 const LEVELS=[
   {name:'폐건물',rows:ROWS,obst:OBST,closets:L1CL,items:ITEMPOS,fuses:[[13,2],[28,3],[3,18]],key:[29,19],box:[15.5,20.4],start:[3.5,3.5],exit:[31.5,8.5],door:[25,10],locked:[21,11,30,20],mod:{gs:1,drain:1,ev:1,amb:1},intro:'여기서... 나가야 해. 먼저 퓨즈를 찾자.'},
-  {name:'지하 병동',rows:L2ROWS,obst:L2OBST,closets:L2CL,items:L2ITEMS,fuses:[[14,2],[29,5],[2,19]],key:[29,19],box:[15.5,20.4],start:[3.5,3.5],exit:[.5,8.5],door:[18,15],locked:[19,10,30,20],mod:{gs:1.15,drain:1.15,ev:.8,amb:.75},intro:'...또 다른 곳이다. 이번엔 더 어둡고, 그것이 더 빠르다.'}
+  {name:'지하 병동',rows:L2ROWS,obst:L2OBST,closets:L2CL,items:L2ITEMS,fuses:[[14,2],[29,5],[2,19]],key:[29,19],box:[15.5,20.4],start:[3.5,3.5],exit:[.5,8.5],door:[18,15],locked:[19,10,30,20],mod:{gs:1.15,drain:1.15,ev:.8,amb:.75},intro:'...또 다른 곳이다. 이번엔 더 어둡고, 그것이 더 빠르다.'},
+  {name:'저주받은 학교',rows:L3ROWS,obst:L3OBST,closets:L3CL,items:{},fuses:[],key:[25,15],box:[14.5,20.4],start:[3.5,3.5],exit:[31.5,8.5],door:[19,15],locked:[20,10,30,20],mod:{gs:1.2,drain:1.2,ev:.7,amb:.68},l3:true,ghost2:true,rand:true,shutters:[[[15,7],[15,8]],[[9,14],[9,15]]],intro:'...학교? 이번엔 둘이야. 어디선가 울음소리와 라디오 소리가 들려. 아이템 위치는 매번 바뀐다.'}
 ];
 let curLvl=0,selLvl=0;
 const LV=()=>LEVELS[curLvl];
@@ -351,6 +394,8 @@ function sfx(n,v,pan){
       nz(1.6,.9*v,'bandpass',700,3800,0,.8);nz(1.2,.4*v,'highpass',3500,7000,.1,2);
       osc('sawtooth',420,1700,1.3,.35*v);osc('square',360,1250,1.3,.26*v);osc('sawtooth',210,900,1.2,.22*v,.05);
       osc('sine',90,30,1.1,1.0*v);nz(.25,.9*v,'lowpass',200,60,0,1);break;
+    case 'wail':osc('sawtooth',640,300,1.8,.16*v);osc('sine',960,430,1.8,.1*v,.1);nz(1.6,.14*v,'bandpass',1400,650,0,5);break;
+    case 'static':nz(.35,.2*v,'bandpass',2000,2600,0,1.5);break;
     case 'sting':osc('sawtooth',880,440,.7,.28*v);osc('sawtooth',932,466,.7,.28*v);nz(.6,.4*v,'bandpass',2500,900,0,3);osc('sine',55,35,.8,.6*v);break;
   }
 }
@@ -360,26 +405,199 @@ const keys={};
 let state='menu',time=0,player,G,items,inv,box,fuses,placed,power,hasKey,light,battery,stamina,locked=false;
 let pillT,flickT,blackoutT,scareT,scareK,nextScare,msgText='',msgT=0,heartT,whisperT,shake,deadT,fear,lightOn,firstFuse,blackoutScare,winTime,flash=0,moving=false,flareT=0,mapT=0,dec=null,decT=0,decBeep=0,pitch=0,camBack=0,DAY=0,CB=0,prox=0;
 
+let GH=null,sanity=100,halls=[],glass=[],radios=[],shutT=0,shutIdx=0,shutOn=null,night=0,hasCard=false,deathBy='G',proxH=0,panH=0,hallT=0;
 function reset(){
   buildMap();
   const L=LV();
   player={x:L.start[0]*TS,y:L.start[1]*TS,ang:0,stepT:0};
   battery=100;stamina=100;light=true;lightOn=true;inv={battery:0,pill:0,charm:0,map:0,flare:0,decoy:0};
-  fuses=0;placed=0;power=false;hasKey=false;pillT=0;flickT=0;blackoutT=0;scareT=0;scareK=0;flareT=0;mapT=0;dec=null;decT=0;decBeep=0;pitch=0;camBack=0;hide.on=false;hide.cool=0;prox=0;
+  fuses=0;placed=0;power=false;hasKey=false;hasCard=false;pillT=0;flickT=0;blackoutT=0;scareT=0;scareK=0;flareT=0;mapT=0;dec=null;decT=0;decBeep=0;pitch=0;camBack=0;hide.on=false;hide.cool=0;prox=0;
   items=[];
   const add=(t,x,y)=>items.push({type:t,x:x*TS+TS/2,y:y*TS+TS/2,taken:false,ph:Math.random()*6});
+  radios=[];glass=[];
+  if(L.rand)randPlace(add);else{
   L.fuses.forEach(p=>add('fuse',p[0],p[1]));add('key',L.key[0],L.key[1]);
   const cnt=D().cnt;
   for(const t in L.items){const arr=L.items[t],n=Math.min(arr.length,cnt[t]||0);for(let i=0;i<n;i++)add(t,arr[i][0],arr[i][1]);}
+  }
   box={x:L.box[0]*TS,y:L.box[1]*TS};
   G={x:0,y:0,state:'dormant',t:0,path:[],pt:0,lit:false,stare:0,check:0,cool:6,rush:0,stepT:0,brT:0,scrT:0,checked:false,stingT:0,wasSeen:false,blink:0};
+  GH={x:0,y:0,state:'dormant',t:0,path:[],pt:0,seen:false,tp:10,check:0,checked:false,stepT:0,brT:0,blink:0};sanity=100;halls=[];hallT=8;shutT=55;shutOn=null;shutIdx=0;night=0;deathBy='G';proxH=0;panH=0;
   time=0;firstFuse=false;nextScare=(40+Math.random()*30)*D().ev;blackoutScare=false;
   msgText='';msgT=0;heartT=0;whisperT=10;shake=0;deadT=0;fear=0;
   msg(L.intro,5);
 }
 function msg(t,d){msgText=t;msgT=d||3.5;}
 function toggleLight(){if(hide.on){msg('옷장 안에서는 손전등을 켤 수 없다.',2);return;}light=!light;sfx('click');}
-const NAMES={battery:'배터리',fuse:'퓨즈',key:'낡은 열쇠',pill:'진정제',charm:'부적',map:'지도',flare:'조명탄',decoy:'소음 장치'};
+const NAMES={battery:'배터리',fuse:'퓨즈',key:'낡은 열쇠',pill:'진정제',charm:'부적',map:'지도',flare:'조명탄',decoy:'소음 장치',card:'출입증'};
+
+
+/* ---------- STAGE 3 ---------- */
+function flood(sx,sy,open){
+  const L=LV(),seen=new Set([sy*MW+sx]),q=[[sx,sy]];
+  while(q.length){
+    const [x,y]=q.pop();
+    for(const [dx,dy] of [[1,0],[-1,0],[0,1],[0,-1]]){
+      const nx=x+dx,ny=y+dy;if(nx<0||ny<0||nx>=MW||ny>=MH)continue;
+      const k=ny*MW+nx;if(seen.has(k))continue;
+      const c=map[ny][nx],door=nx===L.door[0]&&ny===L.door[1];
+      if(c==='#'||c==='X'||c==='C'||(c==='D'&&!(open&&door)))continue;
+      seen.add(k);q.push([nx,ny]);
+    }
+  }
+  return seen;
+}
+function randPlace(add){
+  const L=LV(),st=[Math.floor(L.start[0]),Math.floor(L.start[1])];
+  const closed=flood(st[0],st[1],false),opened=flood(st[0],st[1],true);
+  const tiles=set=>[...set].map(k=>[k%MW,(k/MW)|0]).filter(([x,y])=>map[y][x]==='.');
+  const used=[];
+  const pick=(pool,minStart,sep)=>{
+    for(let i=0;i<400;i++){
+      const p=pool[Math.floor(Math.random()*pool.length)];if(!p)break;
+      if(Math.hypot(p[0]+.5-L.start[0],p[1]+.5-L.start[1])<minStart)continue;
+      if(used.some(u=>Math.hypot(u[0]-p[0],u[1]-p[1])<sep))continue;
+      used.push(p);return p;
+    }
+    const p=pool[Math.floor(Math.random()*pool.length)];used.push(p);return p;
+  };
+  const cP=tiles(closed),oP=tiles(opened),vP=oP.filter(([x,y])=>!closed.has(y*MW+x));
+  for(let i=0;i<3;i++){const p=pick(cP,6,6);add('fuse',p[0],p[1]);}
+  for(let i=0;i<3;i++){const p=pick(cP,5,7);radios.push({x:p[0]*TS+TS/2,y:p[1]*TS+TS/2,on:true,ph:Math.random()*6,rt:Math.random()});}
+  {const p=pick(cP,12,5);add('card',p[0],p[1]);}
+  {const p=pick(vP,0,2);add('key',p[0],p[1]);}
+  const cnt=D().cnt,extra={battery:1,pill:1};
+  for(const t in cnt){const n=cnt[t]+(extra[t]||0);for(let i=0;i<n;i++){const p=pick(oP,3,1.5);add(t,p[0],p[1]);}}
+  for(let i=0;i<7;i++){const p=pick(cP,6,2);glass.push({x:p[0]*TS+TS/2,y:p[1]*TS+TS/2,hit:false,ph:Math.random()*6});}
+}
+const exitReady=()=>hasKey&&(!LV().l3||(hasCard&&radios.every(r=>!r.on)));
+function exitHint(){
+  const need=[];if(!hasKey)need.push('열쇠');
+  if(LV().l3){if(!hasCard)need.push('출입증');if(radios.some(r=>r.on))need.push('라디오 모두 끄기');}
+  return '잠겨 있다. 필요한 것: '+need.join(', ');
+}
+function spawnH(minD){
+  for(let i=0;i<500;i++){
+    const tx=1+Math.floor(Math.random()*30),ty=1+Math.floor(Math.random()*20);
+    if(isSolidTile(tx,ty)||(!power&&inLocked(tx,ty)))continue;
+    const x=tx*TS+TS/2,y=ty*TS+TS/2;
+    if(Math.hypot(x-player.x,y-player.y)>=minD&&!los(x,y,player.x,player.y)){GH.x=x;GH.y=y;GH.path=[];GH.pt=0;return;}
+  }
+  GH.x=28.5*TS;GH.y=2.5*TS;GH.path=[];GH.pt=0;
+}
+function wakeH(){
+  spawnH(520);GH.state='hunt';GH.tp=8;sfx('wail',.7);msg('...어디선가 누군가 울고 있다.',4);
+}
+function turnOffRadio(r){
+  r.on=false;sfx('click');sfx('zap',.5);
+  const n=radios.filter(x=>!x.on).length;
+  if(n>=radios.length)msg('라디오가 모두 꺼졌다. 고요하다... 너무 고요하다.',5);
+  else msg('라디오를 껐다. ('+n+'/'+radios.length+')',3);
+  if(GH.state==='dormant'&&LV().ghost2&&S.ghost)wakeH();
+}
+function updateGhost2(dt){
+  const L=LV();
+  if(!L.ghost2||!S.ghost){proxH=0;return;}
+  const total=fuses+placed,off=radios.filter(r=>!r.on).length,on=radios.length-off;
+  if(GH.state==='dormant'){proxH=0;if(time>D().grace+30||total>0||off>0)wakeH();return;}
+  if(GH.state==='away'){proxH=0;GH.t-=dt;if(GH.t<=0){spawnH(480);GH.state='hunt';GH.tp=8;sfx('wail',.5);}return;}
+  const hideOn=hide.on;
+  const d=Math.hypot(player.x-GH.x,player.y-GH.y);
+  if(GH.blink>0)GH.blink-=dt;else if(Math.random()<dt*.5)GH.blink=.08+Math.random()*.12;
+  const lit=lightOn&&!hideOn&&inLight(player.x,player.y,player.ang,GH.x,GH.y);
+  const seen=!hideOn&&d<650&&facing(GH.x,GH.y)&&los(GH.x,GH.y,player.x,player.y)&&(lit||d<170);
+  GH.seen=seen;
+  const dOn=dec&&decT>0;
+  const ax=dOn?dec.x:(hideOn?hide.fx:player.x),ay=dOn?dec.y:(hideOn?hide.fy:player.y);
+  const dA=Math.hypot(ax-GH.x,ay-GH.y);
+  GH.pt-=dt;if(GH.pt<=0){GH.pt=.35;GH.path=bfs(Math.floor(GH.x/TS),Math.floor(GH.y/TS),Math.floor(ax/TS),Math.floor(ay/TS));}
+  let sp=(82+total*6+night*7+on*7)*D().gs*S.gspd;
+  if(flareT>0&&d<420)sp*=.5;
+  if(d>480&&!dOn&&!hideOn)sp*=1.5;
+  if(hideOn&&!dOn&&dA<46&&GH.check<=0&&!GH.checked){GH.checked=true;GH.check=5+Math.random()*2;sfx('wail',.6);msg('문틈 너머로 우는 소리가 들린다... 움직이지 마.',4);}
+  const frozen=seen||GH.check>0;
+  if(GH.check>0){GH.check-=dt;if(GH.check<=0){GH.state='away';GH.t=16+Math.random()*8;GH.checked=false;msg('울음소리가 멀어졌다...',3);return;}}
+  if(!frozen){
+    let tx=ax,ty=ay;
+    if(GH.path.length&&dA>40){tx=GH.path[0][0]*TS+TS/2;ty=GH.path[0][1]*TS+TS/2;}
+    const ddx=tx-GH.x,ddy=ty-GH.y,dd=Math.hypot(ddx,ddy);
+    if(dd>1){GH.x+=ddx/dd*sp*dt;GH.y+=ddy/dd*sp*dt;}
+    if(dd<4&&GH.path.length)GH.path.shift();
+    GH.tp-=dt;
+    if(GH.tp<=0&&!hideOn&&!dOn&&d>300){
+      GH.tp=9+Math.random()*7;
+      for(let i=0;i<60;i++){
+        const ang=Math.random()*6.283,r=170+Math.random()*100,x=player.x+Math.cos(ang)*r,y=player.y+Math.sin(ang)*r;
+        if(solidAt(x,y)||(!power&&inLocked(Math.floor(x/TS),Math.floor(y/TS)))||los(x,y,player.x,player.y))continue;
+        GH.x=x;GH.y=y;GH.path=[];GH.pt=0;flickT=.5;sfx('wail',.8);shake=Math.max(shake,.25);break;
+      }
+    }
+  }else if(seen){fear=Math.max(fear,.9);if(Math.random()<dt*3)flickT=.05;}
+  let da=Math.atan2(GH.y-player.y,GH.x-player.x)-player.ang;da=Math.atan2(Math.sin(da),Math.cos(da));
+  panH=Math.sin(da);
+  proxH=Math.pow(Math.max(0,Math.min(1,1-d/520)),1.4);
+  fear=Math.max(fear,Math.max(0,Math.min(1,1-d/380)));
+  if(hideOn&&GH.check>0)fear=Math.max(fear,.8);
+  if(S.proxSound){
+    GH.stepT-=dt*(frozen?0:sp/60);
+    if(!frozen&&GH.stepT<=0&&d<520){GH.stepT=.5;sfx('gstep',Math.max(.2,1-d/520),panH);}
+    GH.brT-=dt;if(d<300&&GH.brT<=0){GH.brT=2.2;sfx('wail',Math.max(.25,1-d/300)*.7);}
+  }
+  if(d<320&&Math.random()<dt*.3)flickT=Math.max(flickT,.1);
+  if(S.events&&d<240&&blackoutT<=0&&Math.random()<dt*.1){blackoutT=1.2+Math.random()*1.2;sfx('zap');}
+  if(!hideOn&&d<24)die('H');
+}
+function spawnHall(){
+  for(let i=0;i<40;i++){
+    const ang=player.ang+(Math.random()-.5)*1.2,r=200+Math.random()*180,x=player.x+Math.cos(ang)*r,y=player.y+Math.sin(ang)*r;
+    if(solidAt(x,y)||!los(x,y,player.x,player.y))continue;
+    halls.push({x,y,t:1.6+Math.random()*1.2});sfx('sting',.35);return;
+  }
+}
+function updateL3(dt){
+  const L=LV();if(!L.l3)return;
+  const nn=Math.min(5,Math.floor(time/100));
+  if(nn>night){night=nn;msg('밤이 깊어진다... 그것들이 더 빨라진다.',4);sfx('growl',.7);shake=Math.max(shake,.3);}
+  for(const r of radios){
+    if(!r.on)continue;r.rt-=dt;
+    const d=Math.hypot(r.x-player.x,r.y-player.y);
+    if(r.rt<=0){r.rt=.5+Math.random()*.3;if(d<440)sfx('static',1-d/440);}
+  }
+  for(const gl of glass){
+    if(gl.hit||hide.on)continue;
+    if(Math.hypot(gl.x-player.x,gl.y-player.y)<18){
+      gl.hit=true;sfx('zap');sfx('door',.6);shake=Math.max(shake,.3);msg('유리 조각을 밟았다! 소리가 울려 퍼졌다...',3.5);
+      if(S.ghost){if(G.state!=='hunt')startHunt(260);else G.t+=12;}
+      if(GH.state==='hunt')GH.tp=0;else if(GH.state==='dormant'&&S.ghost)wakeH();
+    }
+  }
+  shutT-=dt;
+  if(shutOn){
+    if(shutT<=0){for(const [x,y] of shutOn)map[y][x]='.';shutOn=null;shutT=45+Math.random()*30;sfx('door',.7);msg('비상 셔터가 올라갔다.',2.5);}
+  }else if(shutT<=0&&time>50){
+    const cells=L.shutters[shutIdx%L.shutters.length];
+    const near=cells.some(([x,y])=>[[player.x,player.y],[G.x,G.y],[GH.x,GH.y]].some(([px,py])=>Math.hypot(px-(x+.5)*TS,py-(y+.5)*TS)<TS*2.2));
+    if(near)shutT=3;
+    else{shutIdx++;shutOn=cells;for(const [x,y] of cells)map[y][x]='D';shutT=18;sfx('door');shake=Math.max(shake,.35);msg('쾅! 비상 셔터가 내려왔다...',4);}
+  }
+  const gd=S.ghost?Math.min(G.state==='hunt'?Math.hypot(G.x-player.x,G.y-player.y):9999,GH.state==='hunt'?Math.hypot(GH.x-player.x,GH.y-player.y):9999):9999;
+  let dr=0;
+  if(!hide.on){if(!lightOn)dr+=1.7;if(gd<320)dr+=2.6*(1-gd/320);if(lightOn&&gd>=320)dr-=1.6;}
+  else dr-=.8;
+  if(pillT>0)dr=Math.min(dr,-1);
+  sanity=Math.max(0,Math.min(100,sanity-dr*dt));
+  if(sanity<45&&!hide.on){
+    fear=Math.max(fear,(1-sanity/45)*.55);
+    hallT-=dt;
+    if(hallT<=0){hallT=(sanity<20?3:7)+Math.random()*5;spawnHall();}
+    if(sanity<20&&Math.random()<dt*.6)flickT=.08+Math.random()*.1;
+  }
+  if(sanity<=0&&!S.infBat)battery=Math.max(0,battery-.5*dt);
+  for(let i=halls.length-1;i>=0;i--){
+    const h=halls[i];h.t-=dt;
+    if(h.t<=0||Math.hypot(h.x-player.x,h.y-player.y)<130){if(h.t>0)sfx('whisper');halls.splice(i,1);}
+  }
+}
 
 /* ---------- GHOST ---------- */
 function inLocked(tx,ty){const r=LV().locked;return tx>=r[0]&&tx<=r[2]&&ty>=r[1]&&ty<=r[3];}
@@ -414,12 +632,12 @@ function inLight(px,py,ang,gx,gy){
   return los(px,py,gx,gy);
 }
 function updateGhost(dt){
-  if(!S.ghost){prox=0;proxTick(0,0,dt);return;}
+  if(!S.ghost){prox=0;proxTick(S.proxSound?proxH:0,panH,dt);return;}
   const total=fuses+placed;
   fear=Math.max(0,fear-dt*1.5);
-  if(G.state==='dormant'){prox=0;proxTick(0,0,dt);if(time>D().grace||total>0||hasKey)startHunt();return;}
+  if(G.state==='dormant'){prox=0;proxTick(S.proxSound?proxH:0,panH,dt);if(time>D().grace||total>0||hasKey)startHunt();return;}
   G.t-=dt;
-  if(G.state==='away'){prox=0;proxTick(0,0,dt);if(G.t<=0)startHunt();return;}
+  if(G.state==='away'){prox=0;proxTick(S.proxSound?proxH:0,panH,dt);if(G.t<=0)startHunt();return;}
   if(G.t<=0&&G.check<=0){G.state='away';G.t=(12+Math.random()*8)*D().away;G.stare=0;return;}
   const hideOn=hide.on;
   const dxp=player.x-G.x,dyp=player.y-G.y,d=Math.hypot(dxp,dyp);
@@ -476,16 +694,17 @@ function updateGhost(dt){
     if(d<240||G.check>0){G.brT-=dt;if(G.brT<=0){G.brT=1.5;sfx('breath',Math.max(.4,1-d/260));}}
     if(d<140&&!hideOn&&G.scrT<=0){G.scrT=8;sfx('screech',.8);}
   }
-  proxTick(S.proxSound?prox:0,pan,dt);
+  proxTick(S.proxSound?Math.max(prox,proxH):0,proxH>prox?panH:pan,dt);
   if(G.lit&&Math.random()<dt*.5)sfx('growl');
   if(d<260&&!G.lit&&!hideOn&&Math.random()<dt*.35)sfx('whisper');
   if(d<300&&Math.random()<.03)flickT=.08+Math.random()*.2;
   if(S.events&&d<260&&blackoutT<=0&&Math.random()<dt*.07){blackoutT=1.4+Math.random()*1.4;sfx('zap');}
   if(!hideOn&&d<22)die();
 }
-function die(){
+function die(who){
   if(state!=='play')return;
-  if(S.god){G.state='away';G.t=5;G.check=0;G.stare=0;shake=.3;sfx('growl');msg('무적! 귀신이 물러났다.',2);return;}
+  deathBy=who||'G';
+  if(S.god){if(GH){GH.state='away';GH.t=6;GH.check=0;GH.checked=false;}G.state='away';G.t=5;G.check=0;G.stare=0;shake=.3;sfx('growl');msg('무적! 귀신이 물러났다.',2);return;}
   state='dead';deadT=0;hide.on=false;setProx(0,0);sfx(S.jump?'scream':'growl',1);
 }
 
@@ -515,6 +734,7 @@ function pickup(it){
       fuses++;msg('퓨즈를 얻었다. ('+(fuses+placed)+'/3)');
       if(!firstFuse){firstFuse=true;setTimeout(()=>{if(state==='play'){blackout();blackoutScare=true;}},2500);}
       break;
+    case 'card':hasCard=true;msg('교무실 출입증이다. (출구를 여는 데 필요하다)',4);sfx('chime');break;
     case 'key':
       hasKey=true;msg('낡은 열쇠다... 출구로 가야 해! 뒤에서 무언가 깨어났다.',5);
       sfx('growl');shake=.5;
@@ -529,13 +749,14 @@ function useItem(n){
     if(inv.battery>0&&battery<100){inv.battery--;battery=Math.min(100,battery+50);sfx('click');msg('배터리를 교체했다.');}
     else if(inv.battery<=0)msg('배터리가 없다.');else msg('아직 배터리가 충분하다.');
   }else if(n===2){
-    if(inv.pill>0){inv.pill--;pillT=12;stamina=100;sfx('click');msg('진정제 복용 — 12초간 지치지 않는다.');}else msg('진정제가 없다.');
+    if(inv.pill>0){inv.pill--;pillT=12;stamina=100;sfx('click');sanity=Math.min(100,sanity+45);msg('진정제 복용 — 12초간 지치지 않는다.');}else msg('진정제가 없다.');
   }else if(n===3){
     if(inv.charm>0){
       inv.charm--;sfx('burn');
       if(G.state==='hunt'){msg('부적이 불타올랐다! 그것이 물러간다...',4);}
       else msg('부적이 불타올랐다. 잠시 안전할 것이다.',4);
       G.state='away';G.t=24;G.check=0;G.stare=0;
+      if(GH&&GH.state==='hunt'){GH.state='away';GH.t=24;GH.check=0;}
     }else msg('부적이 없다.');
   }else if(n===4){
     if(inv.map>0){inv.map--;mapT=30;sfx('pickup');msg('지도를 펼쳤다. 30초간 구조와 아이템·귀신 위치가 보인다.',4);}else msg('지도가 없다.');
@@ -568,12 +789,13 @@ function getTarget(){
     if(d<50&&d<bd&&facing(it.x,it.y)){bd=d;best={kind:'item',it:it,label:'[E] 줍기: '+NAMES[it.type]};}
   }
   if(best)return best;
+  for(const r of radios){if(r.on&&Math.hypot(r.x-player.x,r.y-player.y)<60&&facing(r.x,r.y))return {kind:'radio',r:r,label:'[E] 라디오 끄기'};}
   if(Math.hypot(box.x-player.x,box.y-player.y)<66&&facing(box.x,box.y)){
     return {kind:'box',label:power?'배전함 (가동 중)':'[E] 배전함 — 퓨즈 장착 ('+placed+'/3)'};
   }
   const ex=LV().exit[0]*TS,ey=LV().exit[1]*TS;
   if(Math.hypot(ex-player.x,ey-player.y)<80&&facing(ex,ey)){
-    return {kind:'exit',label:hasKey?'[E] 출구 열기':'[E] 출구 (열쇠가 필요하다)'};
+    return {kind:'exit',label:exitReady()?'[E] 출구 열기':'[E] 출구 (잠겨 있다)'};
   }
   if(hide.cool<=0)for(const c of CLOSETS){
     if(Math.hypot(c.cx-player.x,c.cy-player.y)<70&&facing(c.cx,c.cy))return {kind:'closet',cl:c,label:'[E] 옷장에 숨기'};
@@ -583,12 +805,12 @@ function getTarget(){
 function enterHide(c){
   hide.seen=G.state==='hunt'&&Math.hypot(G.x-player.x,G.y-player.y)<420&&los(G.x,G.y,player.x,player.y);
   hide.on=true;hide.cl=c;hide.fx=c.fx;hide.fy=c.fy;hide.prevLight=light;
-  light=false;G.checked=false;
+  light=false;G.checked=false;if(GH)GH.checked=false;
   player.x=c.cx;player.y=c.cy;player.ang=c.a;pitch=0;
   sfx('door');msg('옷장 안에 숨었다. 숨을 죽여라... 가만히 있으면 안전하다.',4);
 }
 function exitHide(){
-  if(G.state==='hunt'&&G.check>0){msg('문 앞에 무언가 서 있다... 지금 나가면 안 돼.',2.5);return;}
+  if((G.state==='hunt'&&G.check>0)||(GH&&GH.state==='hunt'&&GH.check>0)){msg('문 앞에 무언가 서 있다... 지금 나가면 안 돼.',2.5);return;}
   hide.on=false;hide.cool=2.5;light=hide.prevLight;
   player.x=hide.fx;player.y=hide.fy;G.check=0;
   sfx('door');
@@ -607,6 +829,7 @@ function interact(){
   const t=getTarget();if(!t)return;
   if(t.kind==='closet'){enterHide(t.cl);return;}
   if(t.kind==='item')pickup(t.it);
+  else if(t.kind==='radio')turnOffRadio(t.r);
   else if(t.kind==='box'){
     if(power){msg('이미 전원이 들어와 있다.');return;}
     if(fuses<=0){msg('퓨즈가 필요하다. ('+placed+'/3 장착됨)');return;}
@@ -618,7 +841,7 @@ function interact(){
       if(G.state!=='hunt')startHunt(350);else G.t+=15;
     }else msg('퓨즈 장착 ('+placed+'/3)');
   }else if(t.kind==='exit'){
-    if(!hasKey){msg('잠겨 있다. 열쇠가 필요해.');return;}
+    if(!exitReady()){msg(exitHint(),4);return;}
     winGame();
   }
 }
@@ -678,7 +901,9 @@ function update(dt){
   if(battery<=0&&light&&!update.warned){update.warned=true;msg('배터리가 다 됐다! ('+KEY(1)+' 배터리 교체)',4);}
   if(battery>0)update.warned=false;
 
+  updateGhost2(dt);
   updateGhost(dt);
+  updateL3(dt);
   if(S.autoPick&&!hide.on)for(const it of items){if(!it.taken&&Math.hypot(it.x-player.x,it.y-player.y)<60)pickup(it);}
 
   if(time>nextScare){nextScare=time+(35+Math.random()*40)*D().ev;if(S.events)randomEvent();}
@@ -751,7 +976,27 @@ function buildTextures2(){
   T.flare=makeTex(32,32,g=>{g.fillStyle='#c22';g.fillRect(12,8,8,20);g.fillStyle='#eee';g.fillRect(12,14,8,4);g.fillStyle='#fa3';g.beginPath();g.moveTo(16,2);g.lineTo(20,9);g.lineTo(12,9);g.closePath();g.fill();});
   T.decoy=makeTex(32,32,g=>{g.fillStyle='#a47';g.fillRect(7,12,18,14);g.fillStyle='#fd6';g.beginPath();g.arc(16,12,6,Math.PI,0);g.fill();g.fillStyle='#fff';g.fillRect(13,17,6,4);g.strokeStyle='#fd6';g.lineWidth=2;g.beginPath();g.moveTo(5,8);g.lineTo(9,10);g.moveTo(27,8);g.lineTo(23,10);g.stroke();});
 }
-buildTextures();buildTextures2();
+function buildTextures3(){
+  T.card=makeTex(32,32,g=>{g.fillStyle='#e8e8d0';g.fillRect(5,9,22,15);g.fillStyle='#36c';g.fillRect(5,9,22,4);g.fillStyle='#777';g.fillRect(8,15,7,6);g.fillStyle='#999';g.fillRect(17,16,8,2);g.fillRect(17,19,8,2);g.strokeStyle='#222';g.strokeRect(5.5,9.5,21,14);g.fillStyle='#d44';g.fillRect(13,5,6,4);});
+  const radio=on=>g=>{g.fillStyle='#3a2a1a';g.fillRect(4,10,24,16);g.fillStyle='#5a4a30';g.fillRect(5,11,22,14);g.fillStyle=on?'#cfa':'#554';g.fillRect(7,13,10,8);g.fillStyle='#222';g.beginPath();g.arc(22,17,4,0,7);g.fill();g.strokeStyle='#aaa';g.lineWidth=1.5;g.beginPath();g.moveTo(24,10);g.lineTo(28,2);g.stroke();if(on){g.fillStyle='#f33';g.fillRect(8,23,3,2);}};
+  T.radioOn=makeTex(32,32,radio(true));T.radioOff=makeTex(32,32,radio(false));
+  T.glass=makeTex(32,32,g=>{g.fillStyle='#bde';for(const [x,y,s2] of [[6,20,6],[14,14,5],[20,22,7],[11,25,4],[24,16,4]]){g.beginPath();g.moveTo(x,y);g.lineTo(x+s2,y+s2*.3);g.lineTo(x+s2*.4,y-s2);g.closePath();g.fill();}});
+  T.ghost2=makeTex(64,128,g=>{
+    g.lineCap='round';g.lineJoin='round';
+    g.fillStyle='#030304';g.beginPath();g.moveTo(32,8);g.bezierCurveTo(6,10,4,60,8,118);g.lineTo(24,100);g.lineTo(32,44);g.lineTo(40,100);g.lineTo(56,118);g.bezierCurveTo(60,60,58,10,32,8);g.fill();
+    g.fillStyle='#2b2b30';g.beginPath();g.moveTo(24,40);g.lineTo(40,40);g.lineTo(48,124);g.lineTo(40,118);g.lineTo(34,127);g.lineTo(28,118);g.lineTo(16,124);g.closePath();g.fill();
+    g.strokeStyle='#bdbdc0';g.lineWidth=2.2;g.beginPath();g.moveTo(24,44);g.lineTo(13,80);g.lineTo(11,112);g.moveTo(40,44);g.lineTo(51,80);g.lineTo(53,112);g.stroke();
+    g.lineWidth=1;for(let i=0;i<4;i++){g.beginPath();g.moveTo(11,112);g.lineTo(7+i*2,124);g.moveTo(53,112);g.lineTo(57-i*2,124);g.stroke();}
+    g.save();g.translate(32,24);g.rotate(.22);
+    g.fillStyle='#f6f6f6';g.beginPath();g.ellipse(0,0,10,14,0,0,7);g.fill();
+    g.fillStyle='#030304';g.beginPath();g.ellipse(-4.5,-3,2.6,4.2,0,0,7);g.ellipse(4.5,-3,2.6,4.2,0,0,7);g.fill();
+    g.strokeStyle='#030304';g.lineWidth=1.3;g.beginPath();g.moveTo(-4.5,0);g.lineTo(-5,12);g.moveTo(4.5,0);g.lineTo(5,12);g.stroke();
+    g.beginPath();g.ellipse(0,8,3.2,6,0,0,7);g.fill();
+    g.restore();
+    g.fillStyle='#030304';g.beginPath();g.moveTo(21,16);g.quadraticCurveTo(32,6,43,16);g.lineTo(38,24);g.quadraticCurveTo(32,14,26,24);g.closePath();g.fill();
+  });
+}
+buildTextures();buildTextures2();buildTextures3();
 
 /* ---------- RAYCAST RENDER ---------- */
 let tr=0,tg=0,tb=0,em=false;
@@ -811,7 +1056,7 @@ function drawSprite(s){
   if(tY<0.15)return;
   const tX=(C_dx*ry-C_dy*rx)/PL;
   const tex=s.tex;
-  const scrX=(RW/2)*(1+tX/tY)+(s.ghost?(Math.random()-.5)*(G.rush>0?2.6:G.lit?3.2:.8):0);
+  const scrX=(RW/2)*(1+tX/tY)+(s.ghost?(Math.random()-.5)*(s.jit!==undefined?s.jit:(G.rush>0?2.6:G.lit?3.2:.8)):0);
   const h=RH/tY*s.wh,w=h*tex.w/tex.h;
   const bottom=C_hh+0.5*RH/tY-s.z*RH/tY,top=bottom-h;
   const x0=Math.floor(scrX-w/2),x1=Math.floor(scrX+w/2);
@@ -828,7 +1073,7 @@ function drawSprite(s){
       if(td[ti+3]<128)continue;
       const r=td[ti],g=td[ti+1],b=td[ti+2];
       let br;
-      if(s.ghost&&r>215&&g>215&&b>215)br=G.blink>0?0:1;
+      if(s.ghost&&r>215&&g>215&&b>215)br=(s.g2?GH.blink:G.blink)>0?0:1;
       else{br=lightAt(beamTab[y*RW+x],dist);if(s.bright&&br<.55)br=.55;}
       const di=(y*RW+x)*4;
       data[di]=r*br*LR;data[di+1]=g*br*LG;data[di+2]=b*br*LB;
@@ -865,7 +1110,7 @@ function renderWorld(){
   C_px=px;C_py=py;C_dx=dirX;C_dy=dirY;C_plx=plX;C_ply=plY;C_hh=hh;GS.on=false;
   flash=lightOn?(battery<20?.65:1):0;
   const tn=TINTS[S.tint]||TINTS.warm;LR=tn[0];LG=tn[1];LB=tn[2];
-  AMB=S.bright*S.bright*LV().mod.amb;if(S.nightVis)AMB=Math.max(AMB,6);BK=0.7+0.3*S.bright;
+  AMB=S.bright*S.bright*LV().mod.amb*(1-.06*night);if(S.nightVis)AMB=Math.max(AMB,6);BK=0.7+0.3*S.bright;
   {const t=Math.max(0,Math.min(1,(S.bright-1.8)/1.2));DAY=t*t*(3-2*t);}
   if(DAY>0){LR+=(1-LR)*DAY*.7;LG+=(.97-LG)*DAY*.7;LB+=(.9-LB)*DAY*.7;}
   FL=flareT>0?Math.min(1,flareT/2)*(0.88+0.12*Math.random()):0;
@@ -924,12 +1169,42 @@ function renderWorld(){
   if(third&&camBack>=16)list.push({tex:T.player,x:player.x/TS,y:player.y/TS,wh:.72,z:moving?0.012*Math.abs(Math.sin(time*9)):0,bright:true});
   if(dec&&decT>0)list.push({tex:T.decoy,x:dec.x/TS,y:dec.y/TS,wh:.3,z:0,bright:true});
   if(G.state==='hunt'&&!(G.lit&&Math.random()<.3))list.push({tex:T.ghost,x:G.x/TS,y:G.y/TS,wh:1.12,z:0,ghost:true});
+  for(const r of radios)list.push({tex:r.on?T.radioOn:T.radioOff,x:r.x/TS,y:r.y/TS,wh:.34,z:.02,glim:r.on,type:'radio',ph:r.ph});
+  for(const gl of glass)if(!gl.hit)list.push({tex:T.glass,x:gl.x/TS,y:gl.y/TS,wh:.2,z:0,glim:true,type:'glass',ph:gl.ph});
+  for(const h of halls)list.push({tex:T.ghost,x:h.x/TS,y:h.y/TS,wh:1.12,z:0,ghost:true,jit:2});
+  if(GH&&GH.state==='hunt'&&LV().ghost2)list.push({tex:T.ghost2,x:GH.x/TS,y:GH.y/TS,wh:1.3,z:0,ghost:true,g2:true,jit:GH.seen?0:1.2});
   for(const s of list)s.d=(s.x-px)*(s.x-px)+(s.y-py)*(s.y-py);
   list.sort((a,b)=>b.d-a.d);
   for(const s of list)drawSprite(s);
 }
 
 /* ---------- 2D OVERLAYS ---------- */
+function drawFace2(t,k){
+  const W=cv.width,Hh=cv.height,m=Math.min(W,Hh);
+  const grow=Math.min(1,t*4.5),sc=m*(0.55+0.6*grow);
+  ctx.save();
+  const rr=Math.random();
+  ctx.fillStyle=rr<.12?'#f0f0f0':(rr<.25?'#300':'#050506');ctx.fillRect(0,0,W,Hh);
+  ctx.translate(W/2+(Math.random()-.5)*34,Hh/2+(Math.random()-.5)*34);
+  ctx.rotate(.18+(Math.random()-.5)*.06);
+  ctx.fillStyle='#000';ctx.beginPath();ctx.ellipse(0,0,sc*.62,sc*.8,0,0,7);ctx.fill();
+  ctx.strokeStyle='#000';ctx.lineWidth=Math.max(2,sc*.012);
+  for(let i=0;i<40;i++){const x=(Math.random()-.5)*sc*1.3;ctx.beginPath();ctx.moveTo(x,-sc*.7);ctx.lineTo(x+(Math.random()-.5)*sc*.3,sc*.95);ctx.stroke();}
+  ctx.fillStyle='#ededed';ctx.beginPath();ctx.ellipse(0,0,sc*.34,sc*.46,0,0,7);ctx.fill();
+  ctx.fillStyle='#000';
+  ctx.beginPath();ctx.ellipse(-sc*.13,-sc*.1,sc*.07,sc*.12,0,0,7);ctx.ellipse(sc*.13,-sc*.1,sc*.07,sc*.12,0,0,7);ctx.fill();
+  ctx.fillStyle='rgba(220,0,0,.9)';
+  ctx.beginPath();ctx.arc(-sc*.13+(Math.random()-.5)*4,-sc*.09,sc*.014,0,7);ctx.arc(sc*.13+(Math.random()-.5)*4,-sc*.09,sc*.014,0,7);ctx.fill();
+  ctx.strokeStyle='#000';ctx.lineWidth=Math.max(2,sc*.018);
+  ctx.beginPath();ctx.moveTo(-sc*.13,0);ctx.lineTo(-sc*.15,sc*.3);ctx.moveTo(sc*.13,0);ctx.lineTo(sc*.15,sc*.3);ctx.stroke();
+  const mh=sc*(.14+.16*grow)*(.85+Math.random()*.3);
+  ctx.fillStyle='#000';ctx.beginPath();ctx.ellipse(0,sc*.2,sc*.07,mh,0,0,7);ctx.fill();
+  ctx.beginPath();ctx.moveTo(-sc*.36,-sc*.2);ctx.quadraticCurveTo(0,-sc*.62,sc*.36,-sc*.2);ctx.lineTo(sc*.2,-sc*.18);ctx.quadraticCurveTo(0,-sc*.4,-sc*.2,-sc*.18);ctx.closePath();ctx.fill();
+  ctx.restore();
+  for(let i=0;i<6;i++){const y=Math.random()*Hh,hh=6+Math.random()*40,dx=(Math.random()-.5)*90;ctx.drawImage(cv,0,y,W,hh,dx,y,W,hh);}
+  ctx.fillStyle='rgba(255,0,0,'+((.06+Math.random()*.14)*k)+')';ctx.fillRect(0,0,W,Hh);
+  ctx.fillStyle='rgba(255,255,255,'+(Math.random()*.14)+')';ctx.fillRect(0,0,W,Hh);
+}
 function drawFace(t,k){
   const W=cv.width,H=cv.height,m=Math.min(W,H);
   const grow=Math.min(1,t*5.5),sc=m*(0.62+0.5*grow)*(0.85+k*.25);
@@ -994,7 +1269,7 @@ function drawHand(){
 }
 function drawHUD(){
   const W=cv.width,H=cv.height,mob=device==='mobile';
-  if(S.radar&&G&&S.ghost){const gd=Math.round(Math.hypot(G.x-player.x,G.y-player.y)/TS*10)/10;ctx.save();ctx.font='bold 16px sans-serif';ctx.textAlign='center';ctx.fillStyle=gd<5?'#f55':'#9f9';ctx.fillText('귀신까지 '+gd+'m'+(G.state==='away'?' (물러남)':''),W/2,mob?60:28);ctx.restore();}
+  if(S.radar&&G&&S.ghost){const gd=Math.round(Math.min(Math.hypot(G.x-player.x,G.y-player.y),(GH&&GH.state==='hunt')?Math.hypot(GH.x-player.x,GH.y-player.y):1e9)/TS*10)/10;ctx.save();ctx.font='bold 16px sans-serif';ctx.textAlign='center';ctx.fillStyle=gd<5?'#f55':'#9f9';ctx.fillText('귀신까지 '+gd+'m'+(G.state==='away'?' (물러남)':''),W/2,mob?60:28);ctx.restore();}
   const bl='손전등 '+Math.ceil(battery)+'%'+(light?'':' (꺼짐)');
   if(mob){
     bar(W-190,44,170,16,battery/100,battery<20?'#c33':'#cb3',bl);
@@ -1003,8 +1278,10 @@ function drawHUD(){
     bar(16,H-62,170,18,battery/100,battery<20?'#c33':'#cb3',bl);
     bar(16,H-36,170,14,stamina/100,pillT>0?'#6af':'#4a8','스태미나');
   }
+  if(LV().l3){const sc2=sanity<30?'#a4c':'#86c';if(mob)bar(W-190,84,170,12,sanity/100,sc2,'정신력');else bar(16,H-84,170,14,sanity/100,sc2,'정신력');}
   const total=fuses+placed;
   const lines=[[total>=3||power,'퓨즈 찾기 ('+Math.min(3,total)+'/3)'],[power,'배전함에 퓨즈 장착 ('+placed+'/3)'],[hasKey,power?'열린 방에서 열쇠 찾기':'(전원 복구 후) 잠긴 방의 열쇠'],[false,'출구로 탈출']];
+  if(LV().l3){const off=radios.filter(r=>!r.on).length;lines.splice(2,0,[off>=radios.length,'라디오 모두 끄기 ('+off+'/'+radios.length+')'],[hasCard,'교무실 출입증 찾기']);}
   ctx.save();
   if(mob)ctx.scale(.82,.82);
   ctx.fillStyle='rgba(0,0,0,.55)';ctx.fillRect(12,12,260,22+lines.length*22);
@@ -1060,7 +1337,7 @@ function render(){
   if(S.xray&&state==='play')drawXray();
   if((state==='play'||state==='paused')&&S.view!=='third'&&!hide.on)drawHand();
   if(state==='play'&&scareT>0)drawFace(.6-scareT,scareK);
-  if(state==='dead'){if(S.jump)drawFace(deadT,1);else{ctx.fillStyle='rgba(110,0,0,'+Math.min(.85,deadT*.55)+')';ctx.fillRect(0,0,W,H);}}
+  if(state==='dead'){if(S.jump)(deathBy==='H'?drawFace2:drawFace)(deadT,1);else{ctx.fillStyle='rgba(110,0,0,'+Math.min(.85,deadT*.55)+')';ctx.fillRect(0,0,W,H);}}
   if(state==='play'){drawHUD();if(device==='mobile')drawJoy();}
 }
 function applyMono(){
@@ -1097,8 +1374,8 @@ function drawLocker(){
   for(let i=0;i<n;i++)ctx.fillRect(x0,top+i*gap+sh,w,2);
   ctx.restore();
 }
-const XNAME={battery:'배터리',fuse:'퓨즈',key:'열쇠',pill:'진정제',charm:'부적',map:'지도',flare:'조명탄',decoy:'소음기',box:'배전함',exit:'출구',ghost:'귀신',closet:'옷장'};
-const XCOL={battery:'#5f5',fuse:'#fb4',key:'#fe5',pill:'#f88',charm:'#fde',map:'#8cf',flare:'#f93',decoy:'#fd6',box:'#ccc',exit:'#5f5',ghost:'#f33',closet:'#9ab'};
+const XNAME={battery:'배터리',fuse:'퓨즈',key:'열쇠',pill:'진정제',charm:'부적',map:'지도',flare:'조명탄',decoy:'소음기',box:'배전함',exit:'출구',ghost:'귀신',ghost2:'울음 귀신',radio:'라디오',card:'출입증',closet:'옷장'};
+const XCOL={battery:'#5f5',fuse:'#fb4',key:'#fe5',pill:'#f88',charm:'#fde',map:'#8cf',flare:'#f93',decoy:'#fd6',box:'#ccc',exit:'#5f5',ghost:'#f33',ghost2:'#c6f',radio:'#fa6',card:'#6cf',closet:'#9ab'};
 function xtext(t,x,y,al,col){
   ctx.textAlign=al;ctx.lineWidth=3;ctx.strokeStyle='rgba(0,0,0,.85)';ctx.strokeText(t,x,y);ctx.fillStyle=col;ctx.fillText(t,x,y);
 }
@@ -1109,6 +1386,8 @@ function drawXray(){
   tg.push({x:box.x,y:box.y,k:'box',z:.35});
   tg.push({x:LV().exit[0]*TS,y:LV().exit[1]*TS,k:'exit',z:.5});
   if(G.state==='hunt')tg.push({x:G.x,y:G.y,k:'ghost',z:.5});
+  if(GH&&GH.state==='hunt'&&LV().ghost2)tg.push({x:GH.x,y:GH.y,k:'ghost2',z:.5});
+  for(const r of radios)if(r.on)tg.push({x:r.x,y:r.y,k:'radio',z:.1});
   for(const c of CLOSETS)tg.push({x:c.cx,y:c.cy,k:'closet',z:.4});
   const L=[],R=[];
   ctx.save();ctx.font='bold 12px sans-serif';ctx.textBaseline='middle';
@@ -1155,6 +1434,7 @@ function drawMinimap(mob){
     for(const it of items){if(it.taken)continue;ctx.fillStyle=it.type==='key'?'#fd4':it.type==='fuse'?'#fb4':'#8cf';ctx.fillRect(ox+it.x/TS*ms-1,oy+it.y/TS*ms-1,3,3);}
     ctx.fillStyle='#ccc';ctx.fillRect(ox+box.x/TS*ms-2,oy+box.y/TS*ms-2,4,4);
     if(G.state==='hunt'){ctx.fillStyle='#f33';ctx.beginPath();ctx.arc(ox+G.x/TS*ms,oy+G.y/TS*ms,3,0,7);ctx.fill();}
+    if(GH&&GH.state==='hunt'&&LV().ghost2){ctx.fillStyle='#c6f';ctx.beginPath();ctx.arc(ox+GH.x/TS*ms,oy+GH.y/TS*ms,3,0,7);ctx.fill();}
   }
   const px=ox+player.x/TS*ms,py=oy+player.y/TS*ms;
   ctx.fillStyle='#fff';ctx.beginPath();ctx.arc(px,py,2.5,0,7);ctx.fill();
@@ -1265,7 +1545,7 @@ const inGameNow=()=>player&&(state==='paused'||state==='play');
 const NOGAME='게임 중(일시정지 화면)에서만 쓸 수 있어요.';
 function banish(){
   if(!inGameNow())return NOGAME;
-  G.state='away';G.t=30;G.check=0;G.stare=0;return '귀신을 30초간 쫓아냈어요.';
+  G.state='away';G.t=30;G.check=0;G.stare=0;if(GH&&GH.state==='hunt'){GH.state='away';GH.t=30;GH.check=0;}return '귀신을 30초간 쫓아냈어요.';
 }
 function instaPower(){
   if(!inGameNow())return NOGAME;
@@ -1278,6 +1558,7 @@ function giveKey(){
   if(!inGameNow())return NOGAME;
   if(hasKey)return '이미 열쇠를 가지고 있어요.';
   hasKey=true;items.forEach(i=>{if(i.type==='key')i.taken=true;});sfx('pickup');
+  if(LV().l3){hasCard=true;items.forEach(i=>{if(i.type==='card')i.taken=true;});radios.forEach(r=>{r.on=false;});}
   return '열쇠를 얻었어요. 출구로 가세요!';
 }
 function tpExit(){
@@ -1363,7 +1644,7 @@ const ADMIN=[
  {t:'시작 지점으로 이동',d:'처음 시작한 위치로 돌아갑니다.',type:'action',label:'이동',run:toStart},
  {t:'공포 진정',d:'화면 흔들림·깜빡임·귀신의 노려봄을 즉시 멈춥니다.',type:'action',label:'실행',run:calmDown},
  {t:'모든 아이템 지급',d:'일시정지 화면에서 사용: 각 아이템 +3, 배터리 충전',type:'action',label:'지급',run:giveAll},
- {t:'모든 단계 해금',d:'2단계를 바로 선택할 수 있게 합니다.',type:'action',label:'해금',run:unlockAll}
+ {t:'모든 단계 해금',d:'모든 단계를 바로 선택할 수 있게 합니다.',type:'action',label:'해금',run:unlockAll}
 ];
 function saveS(){try{localStorage.setItem(SKEY,JSON.stringify(S));}catch(e){}}
 function applyS(){if(master)master.gain.value=S.vol;}
@@ -1415,7 +1696,7 @@ function syncAdm(){
 function hpw(t){let h=5381;for(let i=0;i<t.length;i++)h=((h<<5)+h+t.charCodeAt(i))>>>0;return h;}
 function tryAdmin(){
   const v=(admPw.value||'').trim();
-  if(hpw(v)===2392010629){
+  if(hpw(v.toUpperCase())===3553437127){
     adminOn=true;try{localStorage.setItem('horror_admin_ok','1');}catch(e){}
     admPw.value='';admErr.textContent='';admOpen=true;syncAdm();buildSettings();
   }else{admErr.textContent='비밀번호가 틀렸어요.';admPw.value='';}
@@ -1428,6 +1709,8 @@ admLock.addEventListener('click',()=>{
   ADMKEYS.forEach(k=>{S[k]=DEFS[k];});saveS();applyS();syncAdm();buildSettings();
 });
 setbtn.addEventListener('click',()=>{admOpen=false;syncAdm();buildSettings();setPanel.style.display='flex';});
+document.getElementById('logbtn').addEventListener('click',()=>{document.getElementById('logp').style.display='block';});
+document.getElementById('logclose').addEventListener('click',()=>{document.getElementById('logp').style.display='none';});
 document.getElementById('setclose').addEventListener('click',()=>{setPanel.style.display='none';});
 document.getElementById('setreset').addEventListener('click',()=>{Object.assign(S,DEFS);saveS();applyS();buildSettings();});
 function lockPointer(){
@@ -1561,7 +1844,7 @@ function loop(now){
   requestAnimationFrame(loop);
 }
 requestAnimationFrame(loop);
-if(window.__HORROR_DEBUG)window.__h={reset:reset,update:update,render:render,setState:s=>{state=s;},setDevice:setDevice,joy:joy,setPitch:v=>{pitch=v;},S:S,D:D,initAudio:initAudio,enterHide:enterHide,exitHide:exitHide,hide:hide,CL:()=>CLOSETS,banish:banish,refill:refill,collectAll:collectAll,ghostFar:ghostFar,toStart:toStart,calmDown:calmDown,instaPower:instaPower,giveKey:giveKey,tpExit:tpExit,forceWin:forceWin,inv:()=>inv,getStam:()=>stamina,getPL:()=>PL,giveAll:giveAll,unlockAll:unlockAll,tryAdmin:tryAdmin,hpw:hpw,isAdmin:()=>adminOn,syncAdm:syncAdm,setLevel:l=>{curLvl=l;selLvl=l;},progress:progress,interact:interact,getTarget:getTarget,toggleLight:toggleLight,getLight:()=>light,getProx:()=>prox,getState:()=>state,useItem:useItem,die:die,buildSettings:buildSettings,get:()=>({player,G,items})};
+if(window.__HORROR_DEBUG)window.__h={reset:reset,update:update,render:render,setState:s=>{state=s;},setDevice:setDevice,joy:joy,setPitch:v=>{pitch=v;},S:S,D:D,initAudio:initAudio,enterHide:enterHide,exitHide:exitHide,hide:hide,CL:()=>CLOSETS,banish:banish,refill:refill,collectAll:collectAll,ghostFar:ghostFar,toStart:toStart,calmDown:calmDown,instaPower:instaPower,giveKey:giveKey,tpExit:tpExit,forceWin:forceWin,inv:()=>inv,getStam:()=>stamina,getPL:()=>PL,giveAll:giveAll,unlockAll:unlockAll,tryAdmin:tryAdmin,hpw:hpw,isAdmin:()=>adminOn,syncAdm:syncAdm,setLevel:l=>{curLvl=l;selLvl=l;},progress:progress,interact:interact,getTarget:getTarget,toggleLight:toggleLight,getLight:()=>light,getProx:()=>prox,getState:()=>state,useItem:useItem,die:die,buildSettings:buildSettings,get:()=>({player,G,items}),getH:()=>GH,getSan:()=>sanity,radios:()=>radios,glass:()=>glass,getNight:()=>night,getShut:()=>shutOn,hasCard:()=>hasCard,map:()=>map,exitReady:exitReady,turnOffRadio:turnOffRadio,flood:flood};
 })();
 </script>
 </body>
